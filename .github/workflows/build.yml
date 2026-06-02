@@ -3,7 +3,7 @@ name: Build Installer
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # 수동 실행 버튼
+  workflow_dispatch:
 
 jobs:
   # ── macOS .app ─────────────────────────────────────────────
@@ -29,11 +29,14 @@ jobs:
         run: bash build_mac.sh
         working-directory: installer
 
-      - name: 업로드
+      - name: zip 압축
+        run: zip -r DKInstaller-mac.zip installer/dist/DKInstaller.app
+
+      - name: 임시 저장
         uses: actions/upload-artifact@v4
         with:
           name: DKInstaller-mac
-          path: installer/dist/DKInstaller.app
+          path: DKInstaller-mac.zip
 
   # ── Windows .exe ───────────────────────────────────────────
   build-windows:
@@ -54,8 +57,42 @@ jobs:
         run: cmd /c build_windows.bat
         working-directory: installer
 
-      - name: 업로드
+      - name: 임시 저장
         uses: actions/upload-artifact@v4
         with:
           name: DKInstaller-windows
           path: installer/dist/DKInstaller.exe
+
+  # ── Release 업로드 ──────────────────────────────────────────
+  release:
+    needs: [ build-mac, build-windows ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: mac 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: DKInstaller-mac
+
+      - name: windows 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: DKInstaller-windows
+
+      - name: Release에 업로드
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: installer-latest
+          name: "파산게임2 설치 프로그램 (최신)"
+          body: |
+            ## 파산게임2 모드 설치 프로그램
+
+            - **Windows**: `DKInstaller.exe` 다운로드 후 실행
+            - **macOS**: `DKInstaller-mac.zip` 다운로드 후 압축 해제 → `DKInstaller.app` 실행
+          files: |
+            DKInstaller-mac.zip
+            DKInstaller.exe
+          make_latest: true
