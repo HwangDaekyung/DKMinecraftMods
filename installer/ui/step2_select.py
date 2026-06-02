@@ -12,6 +12,7 @@ class Step2SelectFrame(ctk.CTkFrame):
         self._build()
 
     def _build(self):
+        # ── 고정 헤더 ─────────────────────────────────────────────
         ctk.CTkLabel(
             self, text="설치 항목 선택",
             font=ctk.CTkFont(size=18, weight="bold"),
@@ -21,7 +22,13 @@ class Step2SelectFrame(ctk.CTkFrame):
             self,
             text="설치할 항목을 선택하세요. 필수 항목은 해제할 수 없습니다.",
             text_color="gray70",
-        ).pack(pady=(0, 16))
+        ).pack(pady=(0, 8))
+
+        # ── 스크롤 가능한 항목 영역 ───────────────────────────────
+        self._scroll = ctk.CTkScrollableFrame(
+            self, fg_color="transparent", corner_radius=0
+        )
+        self._scroll.pack(fill="both", expand=True, padx=0, pady=(0, 4))
 
         # ── Forge ────────────────────────────────────────────────
         self._add_section("⚙️  Forge 1.12.2")
@@ -53,11 +60,13 @@ class Step2SelectFrame(ctk.CTkFrame):
 
     def _add_section(self, title: str):
         ctk.CTkLabel(
-            self, text=title,
+            self._scroll, text=title,
             font=ctk.CTkFont(size=13, weight="bold"),
             anchor="w",
-        ).pack(fill="x", padx=30, pady=(10, 2))
-        ctk.CTkFrame(self, height=1, fg_color="gray30").pack(fill="x", padx=30, pady=(0, 4))
+        ).pack(fill="x", padx=16, pady=(10, 2))
+        ctk.CTkFrame(
+            self._scroll, height=1, fg_color="gray30"
+        ).pack(fill="x", padx=16, pady=(0, 4))
 
     def _add_item(self, key: str, label: str, desc: str, required: bool):
         var = ctk.BooleanVar(value=True)
@@ -67,8 +76,8 @@ class Step2SelectFrame(ctk.CTkFrame):
         if required:
             var.trace_add("write", lambda *_, v=var: v.set(True) if not v.get() else None)
 
-        row = ctk.CTkFrame(self, fg_color="gray17", corner_radius=8)
-        row.pack(fill="x", padx=30, pady=3)
+        row = ctk.CTkFrame(self._scroll, fg_color="gray17", corner_radius=8)
+        row.pack(fill="x", padx=16, pady=3)
 
         cb = ctk.CTkCheckBox(
             row, text=label,
@@ -77,7 +86,6 @@ class Step2SelectFrame(ctk.CTkFrame):
         )
         cb.pack(side="left", padx=12, pady=8)
 
-        # 필수 항목은 🔒 표시
         tag = "🔒 필수" if required else ""
         ctk.CTkLabel(
             row, text=f"{tag}  {desc}".strip(),
@@ -86,11 +94,9 @@ class Step2SelectFrame(ctk.CTkFrame):
         ).pack(side="right", padx=12)
 
     def on_show(self):
-        """Step 2가 표시될 때 Forge 이미 설치 여부 체크."""
         mc_path = self.state.get("mc_path", "")
         if mc_path and is_forge_installed(mc_path):
             self._check_vars["forge"].set(False)
 
     def get_selections(self) -> dict:
-        """선택된 항목 반환 {key: bool}."""
         return {k: v.get() for k, v in self._check_vars.items()}
