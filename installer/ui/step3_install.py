@@ -83,7 +83,9 @@ class Step3InstallFrame(ctk.CTkFrame):
         try:
             # 1. Forge
             if selections.get("forge"):
-                log("🔧 Forge 설치 중...")
+                log("🔧 Forge 설치 창이 열립니다.")
+                log("   ① 'Install client' 선택 확인", "info")
+                log("   ② OK 클릭 → 설치 완료 후 창 닫기", "info")
                 install_forge(mc_path, progress_cb=log)
                 log("✅ Forge 설치 완료", "ok")
                 done += 1

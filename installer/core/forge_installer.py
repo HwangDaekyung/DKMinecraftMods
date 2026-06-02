@@ -14,8 +14,6 @@ def is_forge_installed(mc_path: str) -> bool:
     versions_dir = Path(mc_path) / "versions"
     if not versions_dir.exists():
         return False
-    forge_ver = config.FORGE_VERSION
-    # 예: 1.12.2-forge1.12.2-14.23.5.2847
     for d in versions_dir.iterdir():
         if d.is_dir() and "forge" in d.name.lower() and "1.12.2" in d.name:
             return True
@@ -28,8 +26,8 @@ def install_forge(
 ) -> bool:
     """
     Forge 1.12.2 설치.
-    progress_cb(message): 진행 상황 텍스트 콜백
-    Returns: 성공 여부
+    Forge 1.12.2 설치 프로그램은 GUI 방식만 지원하므로
+    설치 창을 띄우고 유저가 완료할 때까지 대기합니다.
     """
     java = find_java()
     if java is None:
@@ -44,24 +42,24 @@ def install_forge(
     tmp_dir = Path(tempfile.mkdtemp())
     installer_jar = tmp_dir / f"forge-{config.FORGE_VERSION}-installer.jar"
 
-    # 다운로드
     download_file(config.FORGE_INSTALLER_URL, installer_jar)
 
     if progress_cb:
-        progress_cb("Forge 설치 실행 중... (잠시 기다려주세요)")
+        progress_cb(
+            "Forge 설치 창이 열립니다.\n"
+            "① 'Install client' 선택 확인\n"
+            "② OK 클릭\n"
+            "③ 설치 완료 후 창이 닫힐 때까지 기다려주세요."
+        )
 
-    # --installClient: GUI 없이 클라이언트 설치
+    # GUI 설치 창을 열고 완료될 때까지 대기 (blocking)
     result = subprocess.run(
-        [java, "-jar", str(installer_jar), "--installClient"],
-        capture_output=True,
-        text=True,
-        cwd=str(tmp_dir),
+        [java, "-jar", str(installer_jar)],
+        cwd=str(mc_path),   # .minecraft 폴더에서 실행해야 경로를 자동 인식
     )
 
     if result.returncode != 0:
-        raise RuntimeError(
-            f"Forge 설치 실패:\n{result.stderr[-500:] if result.stderr else '알 수 없는 오류'}"
-        )
+        raise RuntimeError("Forge 설치가 완료되지 않았습니다.")
 
     if progress_cb:
         progress_cb("Forge 설치 완료")
