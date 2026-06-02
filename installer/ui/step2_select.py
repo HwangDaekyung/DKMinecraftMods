@@ -63,6 +63,10 @@ class Step2SelectFrame(ctk.CTkFrame):
         var = ctk.BooleanVar(value=True)
         self._check_vars[key] = var
 
+        # 필수 항목은 체크 해제 시 자동으로 다시 체크
+        if required:
+            var.trace_add("write", lambda *_, v=var: v.set(True) if not v.get() else None)
+
         row = ctk.CTkFrame(self, fg_color="gray17", corner_radius=8)
         row.pack(fill="x", padx=30, pady=3)
 
@@ -70,12 +74,13 @@ class Step2SelectFrame(ctk.CTkFrame):
             row, text=label,
             variable=var,
             font=ctk.CTkFont(size=13, weight="bold"),
-            state="disabled" if required else "normal",
         )
         cb.pack(side="left", padx=12, pady=8)
 
+        # 필수 항목은 🔒 표시
+        tag = "🔒 필수" if required else ""
         ctk.CTkLabel(
-            row, text=desc,
+            row, text=f"{tag}  {desc}".strip(),
             text_color="gray60",
             font=ctk.CTkFont(size=11),
         ).pack(side="right", padx=12)
