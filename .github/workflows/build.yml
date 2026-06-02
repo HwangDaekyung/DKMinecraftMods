@@ -18,10 +18,11 @@ jobs:
           python-version: "3.12"
 
       - name: 의존성 설치
-        run: pip install -r installer/requirements.txt
+        run: pip install -r requirements.txt
+        working-directory: installer
 
       - name: 아이콘 생성
-        run: python3 installer/make_icon.py
+        run: python3 make_icon.py
         working-directory: installer
 
       - name: 빌드
@@ -46,14 +47,15 @@ jobs:
           python-version: "3.12"
 
       - name: 의존성 설치
-        run: pip install -r installer/requirements.txt
+        run: pip install -r requirements.txt
+        working-directory: installer
 
       - name: 빌드
-        run: build_windows.bat
+        run: cmd /c build_windows.bat
         working-directory: installer
 
       - name: 업로드
         uses: actions/upload-artifact@v4
         with:
           name: DKInstaller-windows
-          path: installer\dist\DKInstaller.exe
+          path: installer/dist/DKInstaller.exe
