@@ -95,4 +95,4 @@ jobs:
           files: |
             DKInstaller-mac.zip
             DKInstaller.exe
-          make_latest: true
+          make_latest: false

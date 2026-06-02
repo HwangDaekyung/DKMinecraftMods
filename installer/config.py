@@ -3,8 +3,9 @@
 # ──────────────────────────────────────────────
 
 # GitHub 릴리즈 (모드 파일 다운로드 출처)
-GITHUB_OWNER = "HwangDaekyung"   # ← 본인 GitHub 아이디
-GITHUB_REPO  = "DKMinecraftMods"  # ← 릴리즈용 repo 이름
+GITHUB_OWNER       = "HwangDaekyung"   # ← 본인 GitHub 아이디
+GITHUB_REPO        = "DKMinecraftMods"  # ← 릴리즈용 repo 이름
+MODS_RELEASE_TAG   = "v1.0.0"          # ← 모드 파일이 있는 릴리즈 태그
 
 # Forge
 FORGE_VERSION       = "1.12.2-14.23.5.2847"

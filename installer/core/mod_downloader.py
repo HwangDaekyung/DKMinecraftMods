@@ -6,15 +6,29 @@ from typing import Callable
 import config
 
 
-def get_latest_release() -> dict:
-    """GitHub API로 최신 릴리즈 정보 조회."""
-    url = (
-        f"https://api.github.com/repos/"
-        f"{config.GITHUB_OWNER}/{config.GITHUB_REPO}/releases/latest"
-    )
+def get_mods_release() -> dict:
+    """
+    모드 파일이 있는 릴리즈 조회.
+    config.MODS_RELEASE_TAG 가 있으면 해당 태그, 없으면 latest 사용.
+    """
+    tag = getattr(config, "MODS_RELEASE_TAG", None)
+    if tag:
+        url = (
+            f"https://api.github.com/repos/"
+            f"{config.GITHUB_OWNER}/{config.GITHUB_REPO}/releases/tags/{tag}"
+        )
+    else:
+        url = (
+            f"https://api.github.com/repos/"
+            f"{config.GITHUB_OWNER}/{config.GITHUB_REPO}/releases/latest"
+        )
     resp = requests.get(url, timeout=10)
     resp.raise_for_status()
     return resp.json()
+
+
+# 하위 호환성 유지
+get_latest_release = get_mods_release
 
 
 def get_asset_url(release: dict, filename: str) -> str | None:
