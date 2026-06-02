@@ -1,0 +1,59 @@
+name: Build Installer
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 수동 실행 버튼
+
+jobs:
+  # ── macOS .app ─────────────────────────────────────────────
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 의존성 설치
+        run: pip install -r installer/requirements.txt
+
+      - name: 아이콘 생성
+        run: python3 installer/make_icon.py
+        working-directory: installer
+
+      - name: 빌드
+        run: bash build_mac.sh
+        working-directory: installer
+
+      - name: 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: DKInstaller-mac
+          path: installer/dist/DKInstaller.app
+
+  # ── Windows .exe ───────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 의존성 설치
+        run: pip install -r installer/requirements.txt
+
+      - name: 빌드
+        run: build_windows.bat
+        working-directory: installer
+
+      - name: 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: DKInstaller-windows
+          path: installer\dist\DKInstaller.exe
