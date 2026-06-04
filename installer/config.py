@@ -44,6 +44,13 @@ MODS = [
         "required":    True,
         "description": "음식 재료 모드 (필수)",
     },
+    {
+        "id":          "schematica",
+        "name":        "Schematica",
+        "filename":    "Schematica-1.12.2-1.8.0.169-universal.jar",  # ✅ 릴리즈에 업로드됨
+        "required":    False,
+        "description": "건축 복사/붙여넣기 모드 (선택)",
+    },
 ]
 
 # UI
