@@ -55,23 +55,23 @@ class Step3InstallFrame(ctk.CTkFrame):
         self.log_box.tag_config("err",  foreground="#e74c3c")
         self.log_box.tag_config("info", foreground="#95a5a6")
 
-    def start(self, selections: dict):
+    def start(self, selections: dict, files_to_delete: list[str] | None = None):
         """설치 스레드 시작."""
         self._done = False
         self.progress_bar.set(0)
         thread = threading.Thread(
             target=self._install_worker,
-            args=(selections,),
+            args=(selections, files_to_delete or []),
             daemon=True,
         )
         thread.start()
         self._poll_queue()
 
-    def _install_worker(self, selections: dict):
+    def _install_worker(self, selections: dict, files_to_delete: list[str]):
         """백그라운드 설치 작업."""
         mc_path  = self.state["mc_path"]
         mods_dir = get_mods_dir(mc_path)
-        steps    = self._count_steps(selections)
+        steps    = self._count_steps(selections, files_to_delete)
         done     = 0
 
         def progress(n):
@@ -81,6 +81,19 @@ class Step3InstallFrame(ctk.CTkFrame):
             self._q.put((MSG_LOG, msg, color))
 
         try:
+            # 0. 기존 모드 삭제
+            if files_to_delete:
+                log(f"🗑️  기존 모드 {len(files_to_delete)}개 삭제 중...")
+                for path in files_to_delete:
+                    try:
+                        Path(path).unlink()
+                        log(f"   삭제: {Path(path).name}", "info")
+                    except Exception as e:
+                        log(f"   삭제 실패: {Path(path).name} ({e})", "err")
+                log("✅ 기존 모드 삭제 완료", "ok")
+                done += 1
+                progress(done)
+
             # 1. Forge
             if selections.get("forge"):
                 log("🔧 Forge 설치 창이 열립니다.")
@@ -132,8 +145,9 @@ class Step3InstallFrame(ctk.CTkFrame):
             log(f"❌ 오류 발생: {e}", "err")
             self._q.put((MSG_DONE, False, str(e)))
 
-    def _count_steps(self, selections: dict) -> int:
+    def _count_steps(self, selections: dict, files_to_delete: list[str] = []) -> int:
         n = 0
+        if files_to_delete: n += 1
         if selections.get("forge"): n += 1
         for mod in config.MODS:
             if selections.get(mod["id"]): n += 1

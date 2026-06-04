@@ -178,10 +178,11 @@ class InstallerApp(ctk.CTk):
 
         elif idx == 1:
             selections = self._frames[1].get_selections()
+            files_to_delete = self._frames[1].get_files_to_delete()
             self._state["selections"] = selections
             self._show_step(2)
             # 설치 시작
-            self._frames[2].start(selections)
+            self._frames[2].start(selections, files_to_delete)
 
         elif idx == 3:
             self.destroy()
