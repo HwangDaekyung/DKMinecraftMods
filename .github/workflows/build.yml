@@ -86,7 +86,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           repository: HwangDaekyung/DKMinecraftMods   # Public repo에 배포
-          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: installer-latest
           name: "파산게임2 설치 프로그램 (최신)"
           body: |
