@@ -5,7 +5,7 @@
 # GitHub 릴리즈 (모드 파일 다운로드 출처)
 GITHUB_OWNER       = "HwangDaekyung"   # ← 본인 GitHub 아이디
 GITHUB_REPO        = "DKMinecraftMods"  # ← 릴리즈용 repo 이름
-MODS_RELEASE_TAG   = "v1.1.0"          # ← 모드 파일이 있는 릴리즈 태그
+MODS_RELEASE_TAG   = "v1.2.0"          # ← 모드 파일이 있는 릴리즈 태그
 
 # Forge
 FORGE_VERSION       = "1.12.2-14.23.5.2847"
@@ -26,34 +26,41 @@ MODS = [
     {
         "id":          "dkrecipes",
         "name":        "DKRecipes",
-        "filename":    "DKRecipes-1.0.0.jar",   # ✅ 릴리즈에 업로드됨
+        "filename":    "DKRecipes-1.0.0.jar",
         "required":    True,
         "description": "커스텀 레시피 & HUD 모드 (필수)",
     },
     {
         "id":          "customnpc",
         "name":        "CustomNPC",
-        "filename":    "CustomNPCs_1.12.2-.05Jul20.jar",   # ✅ 릴리즈에 업로드됨
+        "filename":    "CustomNPCs_1.12.2-.05Jul20.jar",
         "required":    True,
         "description": "커스텀 NPC 모드 (필수)",
     },
     {
         "id":          "harvestcraft",
         "name":        "Pam's HarvestCraft",
-        "filename":    "Pam.s.HarvestCraft.1.12.2zg.jar",  # ✅ 릴리즈에 업로드됨
+        "filename":    "Pam.s.HarvestCraft.1.12.2zg.jar",
         "required":    True,
         "description": "음식 재료 모드 (필수)",
     },
     {
-        "id":          "schematica",
-        "name":        "Schematica",
-        "filename":    "Schematica-1.12.2-1.8.0.169-universal.jar",  # ✅ 릴리즈에 업로드됨
-        "required":    False,
-        "description": "건축 복사/붙여넣기 모드 (선택)",
+        "id":          "forgelin",
+        "name":        "Forgelin",
+        "filename":    "Forgelin-1.8.4.jar",
+        "required":    True,
+        "description": "Kotlin 런타임 라이브러리 (필수)",
+    },
+    {
+        "id":          "futuremc",
+        "name":        "Future MC",
+        "filename":    "Future-MC-0.2.21.jar",
+        "required":    True,
+        "description": "최신 버전 컨텐츠 역이식 모드 (필수)",
     },
 ]
 
 # UI
 APP_TITLE   = "파산게임2 모드 설치 프로그램"
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.2.0"
 WINDOW_SIZE = "620x480"
