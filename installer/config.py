@@ -5,7 +5,7 @@
 # GitHub 릴리즈 (모드 파일 다운로드 출처)
 GITHUB_OWNER       = "HwangDaekyung"   # ← 본인 GitHub 아이디
 GITHUB_REPO        = "DKMinecraftMods"  # ← 릴리즈용 repo 이름
-MODS_RELEASE_TAG   = "v1.2.0"          # ← 모드 파일이 있는 릴리즈 태그
+MODS_RELEASE_TAG   = "v1.3.0"          # ← 모드 파일이 있는 릴리즈 태그
 
 # Forge
 FORGE_VERSION       = "1.12.2-14.23.5.2847"
@@ -58,9 +58,23 @@ MODS = [
         "required":    True,
         "description": "최신 버전 컨텐츠 역이식 모드 (필수)",
     },
+    {
+        "id":          "koreanchat",
+        "name":        "Korean Chat",
+        "filename":    "koreanchat-creo-1.12-1.9.jar",
+        "required":    True,
+        "description": "한글 채팅 입력 모드 (필수)",
+    },
+    {
+        "id":          "optifine",
+        "name":        "OptiFine",
+        "filename":    "OptiFine_1.12.2_HD_U_E3.jar",
+        "required":    True,
+        "description": "그래픽 최적화 모드 (필수)",
+    },
 ]
 
 # UI
 APP_TITLE   = "파산게임2 모드 설치 프로그램"
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 WINDOW_SIZE = "620x480"
